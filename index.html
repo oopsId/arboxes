@@ -500,6 +500,38 @@
       }
     }
 
+  #thought-strip{
+  position:absolute;
+  left:50%;
+  bottom:84px;
+  transform:translateX(-50%);
+  width:min(760px, calc(100vw - 28px));
+  max-width:min(760px, calc(100vw - 28px));
+  padding:12px 16px;
+  display:none;
+  pointer-events:none;
+  z-index:24;
+  text-align:left;
+  color:#f1e2b8;
+  font-size:.92rem;
+  line-height:1.5;
+  font-style:italic;
+  background:rgba(16,16,16,.78);
+  border:1px solid rgba(255,219,77,.18);
+  white-space:normal;
+  word-break:normal;
+  overflow-wrap:normal;
+}
+
+@media (max-width: 920px){
+  #thought-strip{
+    bottom:180px;
+    width:calc(100vw - 24px);
+    max-width:calc(100vw - 24px);
+    font-size:.88rem;
+  }
+}  
+
     #volume-hud{
   position:absolute;
   right:12px;
@@ -2383,6 +2415,27 @@ function setMasterVolume(nextVolume) {
   return true;
 }
 
+  function updateOutdoorState() {
+  const isOutsideNow = gs.breakMode && camera.position.z < -4.45;
+
+  if (isOutsideNow && !gs.wasOutside) {
+    gs.wasOutside = true;
+    updateQuest("🚬 Вышел на улицу.", 2600);
+
+    if (!gs.outsideThoughtShown) {
+      gs.outsideThoughtShown = true;
+      showThought("Когда я выхожу на улицу, я понимаю, что вся жизнь — не моя работа. Мне кажется, мне нужно что-то большее. Что если вся моя жизнь — это гонка за +XP... Ха-ха. Да нет, шутка какая-то.", 9800, 22);
+    }
+  } else if (!isOutsideNow && gs.wasOutside) {
+    gs.wasOutside = false;
+    updateQuest("🏢 Вернулся внутрь.", 2400);
+  }
+
+  if (!gs.breakMode) {
+    gs.wasOutside = false;
+  }
+  }
+    
     function setCameraPosition(x, z) {
       const currentX = camera.position.x;
       const currentZ = camera.position.z;
@@ -2842,6 +2895,35 @@ function setMasterVolume(nextVolume) {
     function updateQuest(text, duration = 4600) {
       showTransient("quest-strip", text, duration);
     }
+
+    function showThought(text, duration = 8200, speed = 24) {
+    const el = $("thought-strip");
+    if (!el) return;
+
+    cancelUiTimer("thought-strip");
+    cancelUiTimer("thought-strip-type");
+
+    el.style.display = "block";
+    el.textContent = "";
+
+    let index = 0;
+
+    const tick = () => {
+    index += 1;
+    el.textContent = text.slice(0, index);
+
+    if (index < text.length) {
+      gs.uiTimers["thought-strip-type"] = setTimeout(tick, speed);
+    } else {
+      gs.uiTimers["thought-strip"] = setTimeout(() => {
+        el.style.display = "none";
+        delete gs.uiTimers["thought-strip"];
+      }, duration);
+    }
+   };
+
+  tick();
+ }
 
     function updatePackageStrip() {
       const strip = $("package-strip");
@@ -3653,6 +3735,7 @@ function setMasterVolume(nextVolume) {
         }
       }
       updateMovement(dt);
+      updateOutdoorState();
       updateHover();
       updateGuideLine();
       updateHUD();
