@@ -1172,7 +1172,9 @@ function setMasterVolume(nextVolume) {
       uiTimers: Object.create(null),
       controlsTipShown: false,
       roomLightsOn: true,
-      timeOfDay: "day"
+      timeOfDay: "day",
+      wasOutside: false,
+      outsideThoughtShown: false
     };
 
     const packageTypes = [
