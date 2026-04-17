@@ -2555,7 +2555,7 @@ function setMasterVolume(nextVolume) {
         $("focus-subtitle").textContent = obj.userData.typeName;
         $("focus-hint").textContent = gs.carrying
           ? "Вы уже несёте коробку. Наведитесь на подходящую полку."
-          : "ЛКМ или E/У — приклеить коробку к курсору";
+          : "ЛКМ или E/У — взять коробку";
       } else if (obj.userData.type === "shelf") {
         const correct = gs.carrying && gs.carrying.orderNum === obj.userData.orderNum;
         $("focus-title").textContent = "Полка " + obj.userData.orderNum;
@@ -3117,7 +3117,7 @@ function setMasterVolume(nextVolume) {
       };
       updateCarryUi();
       playSfx("pickup", 0.92);
-      updateQuest(`📦 ${boxData.typeName} ${boxData.orderNum} приклеен к курсору. Найдите полку с тем же номером.`);
+      updateQuest(`📦 ${boxData.typeName} ${boxData.orderNum} коробка взята. Найдите полку с тем же номером.`);
     }
 
     function dropCarriedBox() {
