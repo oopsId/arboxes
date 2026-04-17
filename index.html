@@ -2344,14 +2344,42 @@ function setMasterVolume(nextVolume) {
     }
 
     function canOccupy(x, z) {
-      if (x < (-5.4 + gs.playerRadius) || x > (5.4 - gs.playerRadius) || z < (-4.4 + gs.playerRadius) || z > (4.7 - gs.playerRadius)) {
-        return false;
-      }
-      for (const o of obstacles) {
-        if (circleHitsAABB(x, z, o)) return false;
-      }
-      return true;
-    }
+  const insideMinX = -5.4 + gs.playerRadius;
+  const insideMaxX =  5.4 - gs.playerRadius;
+  const insideMinZ = -4.4 + gs.playerRadius;
+  const insideMaxZ =  4.7 - gs.playerRadius;
+
+  const doorwayHalfWidth = 1.55;
+  const outsideMinX = -4.2 + gs.playerRadius;
+  const outsideMaxX =  4.2 - gs.playerRadius;
+  const outsideMinZ = -7.4 + gs.playerRadius;
+
+  // Боковые стенки комнаты и задняя часть комнаты
+  if (x < insideMinX || x > insideMaxX || z > insideMaxZ) {
+    return false;
+  }
+
+  // Передняя граница / фасад
+  if (z < insideMinZ) {
+    // Выход наружу разрешён только в передышке
+    if (!gs.breakMode) return false;
+
+    // Только через дверной проём
+    if (Math.abs(x) > doorwayHalfWidth) return false;
+
+    // Ограниченная зона "перекура" перед входом
+    if (x < outsideMinX || x > outsideMaxX || z < outsideMinZ) return false;
+
+    return true;
+  }
+
+  // Обычные внутренние препятствия внутри помещения
+  for (const o of obstacles) {
+    if (circleHitsAABB(x, z, o)) return false;
+  }
+
+  return true;
+}
 
     function setCameraPosition(x, z) {
       const currentX = camera.position.x;
