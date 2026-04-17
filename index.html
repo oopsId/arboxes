@@ -1064,6 +1064,29 @@ function playBreakMusic() {
   playTrack(breakMusic);
 }
 
+const SFX = {
+  scan: new Audio("assets/sfx/ui_scan_tick.mp3"),
+  pickup: new Audio("assets/sfx/box_pickup.mp3"),
+  placeOk: new Audio("assets/sfx/box_place_ok.mp3"),
+  drop: new Audio("assets/sfx/box_drop_floor.mp3"),
+  wrongShelf: new Audio("assets/sfx/error_wrong_shelf.mp3"),
+  lightSwitch: new Audio("assets/sfx/light_switch.mp3"),
+  levelSuccess: new Audio("assets/sfx/level_success.mp3")
+};
+
+Object.values(SFX).forEach((s) => {
+  s.preload = "auto";
+});
+
+function playSfx(name, baseVolume = 1) {
+  const src = SFX[name];
+  if (!src) return;
+
+  const s = src.cloneNode(true);
+  s.volume = Math.min(1, masterVolume * baseVolume);
+  s.play().catch(() => {});
+}    
+
 let masterVolume = 0.5;
 let volumeHudTimer = null;
 
