@@ -2418,6 +2418,10 @@ function setMasterVolume(nextVolume) {
     // Ограниченная зона "перекура" перед входом
     if (x < outsideMinX || x > outsideMaxX || z < outsideMinZ) return false;
 
+    for (const o of outdoorObstacles) {
+    if (circleHitsAABB(x, z, o)) return false;
+    }
+
     return true;
   }
 
