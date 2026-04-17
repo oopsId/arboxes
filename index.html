@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>Яндекс Курьер: Доставка — fixed</title>
+  <title>Яндекс Курьер: Доставка</title>
   <style>
     :root{
       --accent:#FFDB4D;
@@ -819,8 +819,8 @@
       <div class="xp-track"><div class="xp-fill" id="xp-fill"></div></div>
     </div>
 
-    <div id="quest-strip" class="panel">🎯 Выберите режим и стартуйте раунд. Цель — заполнить все полки коробками.</div>
-    <div id="look-tip">ЛКМ/ПКМ + drag — обзор. E/У или ЛКМ — действие. WASD/ЦФЫВ — шаги. Средняя кнопка — идти вперёд. Пробел — прыжок.</div>
+    <div id="quest-strip" class="panel">🎯 Выбери режим и стартуй раунд. Цель — заполнить все полки коробками.</div>
+    <div id="look-tip">ПКМ - камера. E/У или ЛКМ — действие. WASD — движение. Средняя кнопка — идти в сторону прицела. Пробел — прыжок.</div>
 
     <div id="crosshair" aria-hidden="true"></div>
 
@@ -830,7 +830,7 @@
       <div id="focus-hint">ЛКМ или E/У — взять</div>
     </div>
 
-    <div id="carry-indicator">📦 Несёте <span id="carry-num"></span>. ЛКМ или E/У по нужной полке — поставить. ЛКМ или E/У в пустоту — отклеить.</div>
+    <div id="carry-indicator">📦 Несёте <span id="carry-num"></span>. ЛКМ или E/У по нужной полке — поставить. ЛКМ или E/У в пустоту — бросить.</div>
 
     <div id="action-bar">
       <button class="btn" id="scan-btn">🔍 Сканировать</button>
@@ -856,9 +856,9 @@
     <div id="start-overlay" class="game-modal-overlay">
       <div class="game-modal">
         <h2>Старт игрового уровня</h2>
-        <p>Игровой уровень — это один полный раунд: от старта до заполнения всех полок коробками. XP-уровень и квалификация живут отдельно.</p>
+        <p>Игровой уровень — это один полный раунд: от старта до заполнения всех полок коробками.</p>
         <div class="modal-grid">
-          <label class="mode-card"><strong><input type="radio" name="round-mode" value="meditation"> Медитация</strong><span>Без таймера. Спокойный проход для осмотра и расстановки.</span></label>
+          <label class="mode-card"><strong><input type="radio" name="round-mode" value="meditation"> Медитация</strong><span>Без таймера. Спокойный режим для осмотра и расстановки.</span></label>
           <label class="mode-card"><strong><input type="radio" name="round-mode" value="work" checked> Рабочий режим</strong><span>С таймером, штрафами и возможностью докупить секунды за XP.</span></label>
         </div>
         <div id="work-pace-wrap">
@@ -911,7 +911,7 @@
     <div id="leaderboard-overlay" class="game-modal-overlay">
       <div class="game-modal">
         <h2>Лидерборд сессии</h2>
-        <p>Хранится в <code>sessionStorage</code> и живёт до закрытия вкладки/окна.</p>
+        <p> живёт до закрытия вкладки/окна.</p>
         <div class="modal-stat-list">
           <div class="modal-stat"><span class="label">Попытки</span><span class="value" id="lb-attempts">0</span></div>
           <div class="modal-stat"><span class="label">Пройдено уровней</span><span class="value" id="lb-completed">0</span></div>
@@ -928,14 +928,14 @@
     <div id="help-overlay" class="game-modal-overlay">
       <div class="game-modal help-modal">
         <h2>Справка</h2>
-        <p>Коротко и без простыни: здесь собраны управление, сканирование, выключатель света и разница между режимами.</p>
+        <p>Коротко обо всём:</p>
         <div class="help-list">
           <p><strong>Обзор камерой:</strong> ЛКМ/ПКМ + drag — вращение камеры и осмотр помещения.</p>
           <p><strong>Движение:</strong> WASD / ЦФЫВ — обычное перемещение по складу. Shift ускоряет шаг.</p>
           <p><strong>Действие:</strong> E / У или ЛКМ по центру экрана — взять коробку, поставить её на полку или щёлкнуть выключатель.</p>
           <p><strong>Прыжок:</strong> пробел — прыжок, когда уровень уже начат и оверлеи закрыты.</p>
           <p><strong>Средняя кнопка мыши:</strong> зажатая средняя кнопка ведёт игрока вперёд без удержания W.</p>
-          <p><strong>Сканирование:</strong> нижняя кнопка «Сканировать» прокладывает контрастную навигационную дорожку: линия сначала стекает от игрока вниз, ложится на пол и изгибается по полу к цели. Если коробка уже в руках — ведёт к нужной полке, если коробки в руках нет — к ближайшей коробке. При запуске сканирования камера сама доворачивается в сторону линии. В «Медитации» сканирование бесплатное. В рабочем режиме цена зависит от темпа: каузал — 5 XP, обычка — 20 XP, киберспорт — 40 XP. При нуле XP в рабочем режиме кнопка блокируется.</p>
+          <p><strong>Сканирование:</strong> нижняя кнопка «Сканировать» прокладывает подсказку - навигационную дорожку: Если коробка уже в руках — ведёт к нужной полке, если коробки в руках нет — к ближайшей коробке.</p>
           <p><strong>Выключатель света:</strong> жёлто-чёрный переключатель на задней стене. Наведитесь и нажмите E / У или ЛКМ, чтобы переключить общее освещение помещения.</p>
           <p><strong>Режимы:</strong> «Медитация» — без таймера, для спокойного осмотра и расстановки. «Рабочий режим» — с таймером, штрафами за просрочку и возможностью докупить немного времени за XP.</p>
         </div>
