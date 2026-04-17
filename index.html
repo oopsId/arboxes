@@ -3074,6 +3074,7 @@ function setMasterVolume(nextVolume) {
       }
 
       addXP(bonusXp);
+      stopAllMusic();
       playSfx("levelSuccess", 0.95);
       gs.sessionStats.completed += 1;
       pushRunEntry({
