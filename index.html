@@ -1796,12 +1796,12 @@ function setMasterVolume(nextVolume) {
       sun,
       warmLight,
       backWarm,
-      defaults: {
-        ambient: ambient.intensity,
-        sun: sun.intensity,
-        warmLight: warmLight.intensity,
-        backWarm: backWarm.intensity
-      },
+      base: {
+         ambient: ambient.intensity,
+         sun: sun.intensity,
+         warmLight: warmLight.intensity,
+         backWarm: backWarm.intensity
+       },
       dim: {
         ambient: 0.12,
         sun: 0.08,
