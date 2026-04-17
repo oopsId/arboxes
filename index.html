@@ -3016,6 +3016,7 @@ function setMasterVolume(nextVolume) {
       }
 
       addXP(bonusXp);
+      playSfx("levelSuccess", 0.95);
       gs.sessionStats.completed += 1;
       pushRunEntry({
         status: "completed",
@@ -3112,6 +3113,7 @@ function setMasterVolume(nextVolume) {
         xp: boxData.xp
       };
       updateCarryUi();
+      playSfx("pickup", 0.92);
       updateQuest(`📦 ${boxData.typeName} ${boxData.orderNum} приклеен к курсору. Найдите полку с тем же номером.`);
     }
 
@@ -3144,6 +3146,7 @@ function setMasterVolume(nextVolume) {
       });
       gs.carrying = null;
       updateCarryUi();
+      playSfx("drop", 0.95);
       updateQuest("📦 Коробка отклеена. Можно схватить её снова или продолжить осмотр.");
     }
 
@@ -3152,6 +3155,7 @@ function setMasterVolume(nextVolume) {
       if (slot.occupied) return;
 
       if (gs.carrying.orderNum !== slot.orderNum) {
+        playSfx("wrongShelf", 0.95);
         showFlash(false);
         showNotif("Не та полка", `Коробка ${gs.carrying.orderNum} должна попасть на полку ${gs.carrying.orderNum}, а не ${slot.orderNum}.`, 0);
         updateQuest(`❌ Номер не совпал. Нужна полка ${gs.carrying.orderNum}.`);
@@ -3180,6 +3184,7 @@ function setMasterVolume(nextVolume) {
       gs.packagesPlaced += 1;
       updateCarryUi();
       addXP(placedXp);
+      playSfx("placeOk", 0.95);
       showFlash(true);
       showNotif("✅ Доставлено", `Посылка ${mesh.userData.orderNum} (${placedTypeName}) поставлена на своё место.`, placedXp);
 
@@ -3214,6 +3219,7 @@ function setMasterVolume(nextVolume) {
 
     function toggleRoomLights() {
       applyRoomLightState(!gs.roomLightsOn);
+      playSfx("lightSwitch", 0.8);
     }
 
     function interactAtCenter() {
@@ -3252,6 +3258,7 @@ function setMasterVolume(nextVolume) {
       }
 
       gs.scanBusy = true;
+      playSfx("scan", 0.9);
       const btn = $("scan-btn");
       btn.disabled = true;
       btn.textContent = "🧭 Сканирование...";
