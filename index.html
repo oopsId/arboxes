@@ -3046,6 +3046,7 @@ function setMasterVolume(nextVolume) {
   gs.roundPaused = true;
   gs.breakMode = true;
   clearLevelState();
+  applyRoomLightState(false);
   updateHUD();
   updateQuest("☕ Передышка. Можно побродить по пустому уровню, открыть лидерборд и перевести дух перед следующим игровым уровнем.");
   setOverlay("complete-overlay", false);
