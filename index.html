@@ -1893,21 +1893,35 @@ function setMasterVolume(nextVolume) {
       outdoorGroup.add(dash);
     }
 
-    [{ x: -6.0, z: -6.95 }, { x: -1.9, z: -6.82 }, { x: 2.2, z: -6.98 }, { x: 6.25, z: -6.78 }].forEach((tp) => {
-      const trunk = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.08, 0.11, 1.45, 8),
-        new THREE.MeshStandardMaterial({ color: 0x6b4b2a, roughness: 0.92 })
-      );
-      trunk.position.set(tp.x, 0.72, tp.z);
-      outdoorGroup.add(trunk);
+    const outdoorObstacles = [];
 
-      const canopy = new THREE.Mesh(
-        new THREE.SphereGeometry(0.72 + Math.random() * 0.18, 14, 12),
-        new THREE.MeshStandardMaterial({ color: 0x5f7b50, roughness: 0.95 })
-      );
-      canopy.position.set(tp.x, 1.88, tp.z);
-      outdoorGroup.add(canopy);
-    });
+[
+  { x: -6.0, z: -6.95 },
+  { x: -1.9, z: -6.82 },
+  { x:  2.2, z: -6.98 },
+  { x:  6.25, z: -6.78 }
+  ].forEach((tp) => {
+  const trunk = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.08, 0.11, 1.45, 8),
+    new THREE.MeshStandardMaterial({ color: 0x6b4b2a, roughness: 0.92 })
+  );
+  trunk.position.set(tp.x, 0.72, tp.z);
+  outdoorGroup.add(trunk);
+
+  const canopy = new THREE.Mesh(
+    new THREE.SphereGeometry(0.72 + Math.random() * 0.18, 14, 12),
+    new THREE.MeshStandardMaterial({ color: 0x5f7b50, roughness: 0.95 })
+  );
+  canopy.position.set(tp.x, 1.88, tp.z);
+  outdoorGroup.add(canopy);
+
+  outdoorObstacles.push({
+    minX: tp.x - 0.34,
+    maxX: tp.x + 0.34,
+    minZ: tp.z - 0.34,
+    maxZ: tp.z + 0.34
+  });
+});
 
     const cars = [];
     const carPaints = [0x718cff, 0xaecf66, 0xd8d8d8, 0xc77979];
