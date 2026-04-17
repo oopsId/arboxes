@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>Яндекс Курьер: Доставка</title>
+  <title>Яндекс Курьер: Начало </title>
   <style>
     :root{
       --accent:#FFDB4D;
@@ -1899,6 +1899,60 @@ function setMasterVolume(nextVolume) {
       cars.push({ mesh: car, speed: 0.035 + Math.random() * 0.025, dir, range: 14.5 });
     }
 
+  function applyTimeOfDay(preset = "day") {
+  gs.timeOfDay = preset;
+
+  const skyColor = new THREE.Color();
+  const skyPlaneColor = new THREE.Color();
+  let fogNear = 8;
+  let fogFar = 28;
+
+  if (preset === "dusk") {
+    skyColor.setHSL(0.06, 0.55, 0.34);
+    skyPlaneColor.set(0xd7865e);
+
+    fogNear = 7;
+    fogFar = 24;
+
+    sun.color.set(0xff9a55);
+
+    roomLights.base.ambient = 0.34;
+    roomLights.base.sun = 0.16;
+    roomLights.base.warmLight = 0.72;
+    roomLights.base.backWarm = 0.46;
+  } else {
+    skyColor.setHSL(0.57, 0.34, 0.86);
+    skyPlaneColor.set(0xc6dced);
+
+    fogNear = 8;
+    fogFar = 28;
+
+    sun.color.set(0xfff6e0);
+
+    roomLights.base.ambient = 0.74;
+    roomLights.base.sun = 0.58;
+    roomLights.base.warmLight = 0.65;
+    roomLights.base.backWarm = 0.34;
+  }
+
+  skyPlane.material.color.copy(skyPlaneColor);
+
+  if (!gs.arEnabled) {
+    scene.background = skyColor.clone();
+
+    if (scene.fog) {
+      scene.fog.color.copy(skyColor);
+      scene.fog.near = fogNear;
+      scene.fog.far = fogFar;
+    } else {
+      scene.fog = new THREE.Fog(skyColor.clone(), fogNear, fogFar);
+    }
+  }
+
+  applyRoomLightState(gs.roomLightsOn);
+}
+
+    
     const pallet = new THREE.Mesh(
       new THREE.BoxGeometry(1.8, 0.08, 1.2),
       new THREE.MeshStandardMaterial({ color: 0x8B6914, roughness: 0.95 })
@@ -2941,7 +2995,7 @@ function setMasterVolume(nextVolume) {
       $("work-pace-wrap").style.display = mode === "work" ? "block" : "none";
     }
 
-    function startLevel(mode = gs.roundMode, pace = gs.workPace, restartCurrent = false) {
+  function startLevel(mode = gs.roundMode, pace = gs.workPace, restartCurrent = false) {
   stopAllMusic();
   clearLevelState();
 
@@ -2959,8 +3013,9 @@ function setMasterVolume(nextVolume) {
   gs.sessionStats.attempts += 1;
   saveSessionStats();
 
+  applyTimeOfDay("day");
   applyRoomLightState(true);
-      
+
   resetView();
   replenishBoxes();
   replenishBoxes();
@@ -3049,7 +3104,10 @@ function setMasterVolume(nextVolume) {
   gs.roundPaused = true;
   gs.breakMode = true;
   clearLevelState();
+
+  applyTimeOfDay("dusk");
   applyRoomLightState(false);
+
   updateHUD();
   updateQuest("☕ Передышка. Можно побродить по пустому уровню, открыть лидерборд и перевести дух перед следующим игровым уровнем.");
   setOverlay("complete-overlay", false);
@@ -3202,24 +3260,27 @@ function setMasterVolume(nextVolume) {
       updateHUD();
     }
 
-    function applyRoomLightState(enabled) {
-      gs.roomLightsOn = !!enabled;
-      roomLights.ambient.intensity = enabled ? roomLights.defaults.ambient : roomLights.dim.ambient;
-      roomLights.sun.intensity = enabled ? roomLights.defaults.sun : roomLights.dim.sun;
-      roomLights.warmLight.intensity = enabled ? roomLights.defaults.warmLight : roomLights.dim.warmLight;
-      roomLights.backWarm.intensity = enabled ? roomLights.defaults.backWarm : roomLights.dim.backWarm;
-      roomLights.switchToggle.position.y = enabled ? 0.018 : -0.03;
-      roomLights.switchToggle.rotation.x = enabled ? -0.24 : 0.22;
-      roomLights.switchToggle.material.emissiveIntensity = enabled ? 0.1 : 0.22;
-      roomLights.switchFrame.material.emissive = new THREE.Color(enabled ? 0x121212 : 0x090909);
-      roomLights.warningPlate.material.emissiveIntensity = enabled ? 0.18 : 0.08;
-      roomLights.switchIndicator.material.color.set(enabled ? 0xffd64d : 0xff4b2b);
-      roomLights.switchIndicator.material.emissive.set(enabled ? 0xffb300 : 0xb51212);
-      roomLights.switchIndicator.material.emissiveIntensity = enabled ? 0.95 : 0.72;
-      roomLights.switchIndicatorGlow.color.set(enabled ? 0xffcb2f : 0xff3b22);
-      roomLights.switchIndicatorGlow.intensity = enabled ? 0.42 : 0.26;
-      updateGuideLineAppearance();
-    }
+  function applyRoomLightState(enabled) {
+  gs.roomLightsOn = !!enabled;
+
+  roomLights.ambient.intensity = enabled ? roomLights.base.ambient : roomLights.dim.ambient;
+  roomLights.sun.intensity = enabled ? roomLights.base.sun : roomLights.dim.sun;
+  roomLights.warmLight.intensity = enabled ? roomLights.base.warmLight : roomLights.dim.warmLight;
+  roomLights.backWarm.intensity = enabled ? roomLights.base.backWarm : roomLights.dim.backWarm;
+
+  roomLights.switchToggle.position.y = enabled ? 0.018 : -0.03;
+  roomLights.switchToggle.rotation.x = enabled ? -0.24 : 0.22;
+  roomLights.switchToggle.material.emissiveIntensity = enabled ? 0.1 : 0.22;
+  roomLights.switchFrame.material.emissive = new THREE.Color(enabled ? 0x121212 : 0x090909);
+  roomLights.warningPlate.material.emissiveIntensity = enabled ? 0.18 : 0.08;
+  roomLights.switchIndicator.material.color.set(enabled ? 0xffd64d : 0xff4b2b);
+  roomLights.switchIndicator.material.emissive.set(enabled ? 0xffb300 : 0xb51212);
+  roomLights.switchIndicator.material.emissiveIntensity = enabled ? 0.95 : 0.72;
+  roomLights.switchIndicatorGlow.color.set(enabled ? 0xffcb2f : 0xff3b22);
+  roomLights.switchIndicatorGlow.intensity = enabled ? 0.42 : 0.26;
+
+  updateGuideLineAppearance();
+}
 
     function toggleRoomLights() {
       applyRoomLightState(!gs.roomLightsOn);
@@ -3343,8 +3404,7 @@ function setMasterVolume(nextVolume) {
         arVideo.style.display = "none";
         hideTransient("ar-status");
         arBtn.textContent = "📷 Камера / AR";
-        scene.background = new THREE.Color(0xdfe8ef);
-        scene.fog = new THREE.Fog(0xdfe8ef, 8, 28);
+        applyTimeOfDay(gs.timeOfDay);
         return;
       }
 
@@ -3607,11 +3667,6 @@ function setMasterVolume(nextVolume) {
         }
       }
 
-      if (!gs.arEnabled) {
-        const skyColor = new THREE.Color().setHSL(0.57, 0.34, 0.86);
-        scene.background = skyColor;
-        if (scene.fog) scene.fog.color.copy(skyColor);
-      }
 
       renderer.render(scene, camera);
     }
@@ -3659,13 +3714,16 @@ function setMasterVolume(nextVolume) {
        }
     }, { passive: false });
 
-   function init() {
+  function init() {
   gs.sessionStats = loadSessionStats();
   updateModeControlsVisibility();
   updateStartOverlayTimes();
   updateCameraRotation();
-  updateHUD();
   resetView();
+
+  applyTimeOfDay("day");
+
+  updateHUD();
   renderLeaderboard();
   applyMasterVolume();
   showVolumeHud();
@@ -3674,7 +3732,7 @@ function setMasterVolume(nextVolume) {
   }, 900);
   setOverlay("start-overlay", true);
   animate(performance.now());
-}
+ }
 
     init();
   })();
