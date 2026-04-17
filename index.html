@@ -501,6 +501,64 @@
       }
     }
 
+    #volume-hud{
+  position:absolute;
+  right:12px;
+  bottom:84px;
+  width:min(260px, calc(100vw - 24px));
+  padding:10px 12px;
+  display:none;
+  align-items:center;
+  gap:10px;
+  pointer-events:none;
+  z-index:23;
+}
+
+#volume-hud.visible{
+  display:flex;
+}
+
+#volume-hud-icon{
+  flex:0 0 auto;
+  font-size:1rem;
+  line-height:1;
+}
+
+#volume-hud-bar{
+  flex:1 1 auto;
+  height:8px;
+  border-radius:999px;
+  overflow:hidden;
+  background:rgba(255,255,255,.12);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.06);
+}
+
+#volume-hud-fill{
+  width:50%;
+  height:100%;
+  border-radius:999px;
+  background:linear-gradient(90deg,var(--accent2),var(--accent));
+  transition:width .12s ease;
+}
+
+#volume-hud-value{
+  flex:0 0 auto;
+  min-width:46px;
+  text-align:right;
+  font-size:.86rem;
+  font-weight:800;
+  color:var(--accent);
+}
+
+@media (max-width: 920px){
+  #volume-hud{
+    right:12px;
+    left:12px;
+    width:auto;
+    bottom:126px;
+  }
+}
+
     .hud-icon-btn{
       width:42px;
       height:42px;
