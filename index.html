@@ -951,6 +951,55 @@
   (() => {
     const $ = (id) => document.getElementById(id);
 
+    const workMusic = new Audio("assets/music/level_work_timer.mp3");
+workMusic.loop = true;
+workMusic.preload = "auto";
+workMusic.volume = 0.24;
+
+const meditationMusic = new Audio("assets/music/level_meditation_quietsort.mp3");
+meditationMusic.loop = true;
+meditationMusic.preload = "auto";
+meditationMusic.volume = 0.22;
+
+const breakMusic = new Audio("assets/music/break_afterhours_lounge.mp3");
+breakMusic.loop = true;
+breakMusic.preload = "auto";
+breakMusic.volume = 0.26;
+
+function stopAllMusic() {
+  [workMusic, meditationMusic, breakMusic].forEach((track) => {
+    track.pause();
+    track.currentTime = 0;
+  });
+}
+
+function playTrack(track) {
+  [workMusic, meditationMusic, breakMusic].forEach((other) => {
+    if (other !== track) {
+      other.pause();
+      other.currentTime = 0;
+    }
+  });
+
+  track.currentTime = 0;
+  track.play().catch(() => {
+    // autoplay может быть заблокирован до первого клика пользователя
+  });
+}
+
+function playLevelMusic(mode) {
+  if (mode === "meditation") {
+    playTrack(meditationMusic);
+  } else {
+    playTrack(workMusic);
+  }
+}
+
+function playBreakMusic() {
+  playTrack(breakMusic);
+}
+
+    
     const gs = {
       level: 1,
       xp: 0,
@@ -2768,31 +2817,41 @@
     }
 
     function startLevel(mode = gs.roundMode, pace = gs.workPace, restartCurrent = false) {
-      clearLevelState();
-      if (!restartCurrent) {
-        gs.gameLevel = Math.max(1, gs.gameLevel);
-      }
-      applyRoundSettings(mode, pace);
-      gs.roundActive = true;
-      gs.roundPaused = false;
-      gs.breakMode = false;
-      gs.roundStartedAt = performance.now();
-      gs.lastPenalty = 0;
-      gs.scanBusy = false;
-      gs.sessionStats.attempts += 1;
-      saveSessionStats();
-      resetView();
-      replenishBoxes();
-      replenishBoxes();
-      updateHUD();
-      const modeLabel = mode === "meditation" ? "медитация" : `рабочий режим · ${pace === "casual" ? "каузал" : pace === "esports" ? "киберспорт" : "обычка"}`;
-      updateQuest(`🎯 Игровой уровень ${gs.gameLevel}: заполните все ${shelfSlots.length} полок. Режим: ${modeLabel}.`);
-      setOverlay("start-overlay", false);
-      setOverlay("timeout-overlay", false);
-      setOverlay("complete-overlay", false);
-      hideTransient("notification");
-      if (!gs.controlsTipShown) showControlsTip();
-    }
+  stopAllMusic();
+  clearLevelState();
+
+  if (!restartCurrent) {
+    gs.gameLevel = Math.max(1, gs.gameLevel);
+  }
+
+  applyRoundSettings(mode, pace);
+  gs.roundActive = true;
+  gs.roundPaused = false;
+  gs.breakMode = false;
+  gs.roundStartedAt = performance.now();
+  gs.lastPenalty = 0;
+  gs.scanBusy = false;
+  gs.sessionStats.attempts += 1;
+  saveSessionStats();
+
+  resetView();
+  replenishBoxes();
+  replenishBoxes();
+  updateHUD();
+  playLevelMusic(mode);
+
+  const modeLabel = mode === "meditation"
+    ? "медитация"
+    : `рабочий режим · ${pace === "casual" ? "каузал" : pace === "esports" ? "киберспорт" : "обычка"}`;
+
+  updateQuest(`🎯 Игровой уровень ${gs.gameLevel}: заполните все ${shelfSlots.length} полок. Режим: ${modeLabel}.`);
+  setOverlay("start-overlay", false);
+  setOverlay("timeout-overlay", false);
+  setOverlay("complete-overlay", false);
+  hideTransient("notification");
+
+  if (!gs.controlsTipShown) showControlsTip();
+}
 
     function finishLevel() {
       gs.roundActive = false;
@@ -2856,16 +2915,18 @@
       setOverlay("complete-overlay", true);
     }
 
-    function enterBreakMode() {
-      gs.roundActive = false;
-      gs.roundPaused = true;
-      gs.breakMode = true;
-      clearLevelState();
-      updateHUD();
-      updateQuest("☕ Передышка. Можно побродить по пустому уровню, открыть лидерборд и перевести дух перед следующим игровым уровнем.");
-      setOverlay("complete-overlay", false);
-      hideTransient("notification");
-    }
+  function enterBreakMode() {
+  stopAllMusic();
+  gs.roundActive = false;
+  gs.roundPaused = true;
+  gs.breakMode = true;
+  clearLevelState();
+  updateHUD();
+  updateQuest("☕ Передышка. Можно побродить по пустому уровню, открыть лидерборд и перевести дух перед следующим игровым уровнем.");
+  setOverlay("complete-overlay", false);
+  hideTransient("notification");
+  playBreakMusic();
+  }
 
     function handleTimeout() {
       if (!gs.roundActive) return;
@@ -3452,22 +3513,23 @@
 
     window.addEventListener("resize", onResize);
 
-    function init() {
-      gs.sessionStats = loadSessionStats();
-      updateModeControlsVisibility();
-      updateStartOverlayTimes();
-      updateCameraRotation();
-      updateHUD();
-      applyRoomLightState(true);
-      resetView();
-      renderLeaderboard();
-      hideTransient("quest-strip");
-      hideTransient("look-tip");
-      hideTransient("notification");
-      hideTransient("ar-status");
-      setOverlay("start-overlay", true);
-      animate(performance.now());
-    }
+   function init() {
+  gs.sessionStats = loadSessionStats();
+  updateModeControlsVisibility();
+  updateStartOverlayTimes();
+  updateCameraRotation();
+  updateHUD();
+  applyRoomLightState(true);
+  resetView();
+  renderLeaderboard();
+  hideTransient("quest-strip");
+  hideTransient("look-tip");
+  hideTransient("notification");
+  hideTransient("ar-status");
+  stopAllMusic();
+  setOverlay("start-overlay", true);
+  animate(performance.now());
+}
 
     init();
   })();
