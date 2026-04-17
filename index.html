@@ -1146,14 +1146,6 @@
     rightWall.position.set(6.3, 2.1, -1.25);
     sceneRoot.add(rightWall);
 
-    const accMat = new THREE.MeshBasicMaterial({ color: 0xf6ab00 });
-    [-4.6, 4.6].forEach((x) => {
-      const acc = new THREE.Mesh(new THREE.PlaneGeometry(3.4, 0.1), accMat);
-      acc.position.set(x, 2.9, -0.1);
-      acc.rotation.y = Math.PI / 2;
-      sceneRoot.add(acc);
-    });
-
     const deskTopMat = new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0.18, metalness: 0.28 });
     const deskFrontMat = new THREE.MeshStandardMaterial({ color: 0xd48300, roughness: 0.72 });
 
