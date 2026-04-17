@@ -1065,6 +1065,42 @@ function playBreakMusic() {
   playTrack(breakMusic);
 }
 
+let masterVolume = 0.5;
+let volumeHudTimer = null;
+
+function applyMasterVolume() {
+  workMusic.volume = 0.24 * masterVolume;
+  meditationMusic.volume = 0.22 * masterVolume;
+  breakMusic.volume = 0.26 * masterVolume;
+}
+
+function showVolumeHud() {
+  const hud = $("volume-hud");
+  const fill = $("volume-hud-fill");
+  const value = $("volume-hud-value");
+  const icon = $("volume-hud-icon");
+
+  const percent = Math.round(masterVolume * 100);
+  fill.style.width = percent + "%";
+  value.textContent = percent + "%";
+
+  if (percent <= 0) icon.textContent = "🔇";
+  else if (percent < 40) icon.textContent = "🔉";
+  else icon.textContent = "🔊";
+
+  hud.classList.add("visible");
+
+  if (volumeHudTimer) clearTimeout(volumeHudTimer);
+  volumeHudTimer = setTimeout(() => {
+    hud.classList.remove("visible");
+  }, 1200);
+}
+
+function setMasterVolume(nextVolume) {
+  masterVolume = Math.max(0, Math.min(1, nextVolume));
+  applyMasterVolume();
+  showVolumeHud();
+}
     
     const gs = {
       level: 1,
