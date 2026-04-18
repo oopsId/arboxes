@@ -3876,12 +3876,14 @@ function setMasterVolume(nextVolume) {
        }
     }, { passive: false });
 
-  function init() {
+  async function init() {
   gs.sessionStats = loadSessionStats();
   updateModeControlsVisibility();
   updateStartOverlayTimes();
   updateCameraRotation();
   resetView();
+
+  await loadThoughts();
 
   applyTimeOfDay("day");
 
@@ -3894,7 +3896,7 @@ function setMasterVolume(nextVolume) {
   }, 900);
   setOverlay("start-overlay", true);
   animate(performance.now());
- }
+}
 
     init();
   })();
