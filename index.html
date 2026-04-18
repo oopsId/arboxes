@@ -3307,16 +3307,17 @@ function setMasterVolume(nextVolume) {
   gs.roundPaused = true;
   gs.breakMode = true;
   clearLevelState();
-  prepareBreakThought();
+
   applyTimeOfDay("dusk");
   applyRoomLightState(false);
+  setOutdoorAmbience(false);
 
   updateHUD();
   updateQuest("☕ Передышка. Можно побродить по пустому уровню, открыть лидерборд и перевести дух перед следующим игровым уровнем.");
   setOverlay("complete-overlay", false);
   hideTransient("notification");
   playBreakMusic();
-  }
+}
 
     function handleTimeout() {
       if (!gs.roundActive) return;
