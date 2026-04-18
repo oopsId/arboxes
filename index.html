@@ -1163,7 +1163,10 @@ let volumeHudTimer = null;
 function applyMasterVolume() {
   workMusic.volume = 0.24 * masterVolume;
   meditationMusic.volume = 0.22 * masterVolume;
-  breakMusic.volume = 0.26 * masterVolume;
+  breakMusic.volume = (outdoorAmbienceOn ? 0.08 : 0.26) * masterVolume;
+
+  streetTrafficLoop.volume = (outdoorAmbienceOn ? 0.18 : 0) * masterVolume;
+  streetWindLoop.volume = (outdoorAmbienceOn ? 0.10 : 0) * masterVolume;
 }
 
 function showVolumeHud() {
