@@ -2443,9 +2443,9 @@ function setMasterVolume(nextVolume) {
     gs.wasOutside = true;
     updateQuest("🚬 Вышел на улицу.", 2600);
 
-    if (!gs.outsideThoughtShown) {
-      gs.outsideThoughtShown = true;
-      showThought("Когда я выхожу на улицу, я понимаю, что вся жизнь — не моя работа. Мне кажется, мне нужно что-то большее. Что если вся моя жизнь — это гонка за +XP... Ха-ха. Да нет, шутка какая-то.", 9800, 22);
+    if (!gs.outsideThoughtShownThisBreak && gs.currentBreakThought) {
+      gs.outsideThoughtShownThisBreak = true;
+      showThought(gs.currentBreakThought, 9800, 22);
     }
   } else if (!isOutsideNow && gs.wasOutside) {
     gs.wasOutside = false;
@@ -2455,7 +2455,7 @@ function setMasterVolume(nextVolume) {
   if (!gs.breakMode) {
     gs.wasOutside = false;
   }
-  }
+ }
     
     function setCameraPosition(x, z) {
       const currentX = camera.position.x;
