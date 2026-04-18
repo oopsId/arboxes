@@ -1206,7 +1206,10 @@ function setMasterVolume(nextVolume) {
       roomLightsOn: true,
       timeOfDay: "day",
       wasOutside: false,
-      outsideThoughtShown: false
+      thoughts: [],
+      nextThoughtIndex: 0,
+      currentBreakThought: "",
+      outsideThoughtShownThisBreak: false
     };
 
     const packageTypes = [
