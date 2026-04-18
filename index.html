@@ -1063,6 +1063,44 @@ breakMusic.loop = true;
 breakMusic.preload = "auto";
 breakMusic.volume = 0.26;
 
+const streetTrafficLoop = new Audio("assets/ambience/outdoor_traffic_loop.mp3");
+streetTrafficLoop.loop = true;
+streetTrafficLoop.preload = "auto";
+streetTrafficLoop.volume = 0.18;
+
+const streetWindLoop = new Audio("assets/ambience/outdoor_wind_loop.mp3");
+streetWindLoop.loop = true;
+streetWindLoop.preload = "auto";
+streetWindLoop.volume = 0.10;
+
+let outdoorAmbienceOn = false;
+
+function setOutdoorAmbience(enabled) {
+  if (outdoorAmbienceOn === enabled) return;
+  outdoorAmbienceOn = enabled;
+
+  const tracks = [streetTrafficLoop, streetWindLoop];
+
+  if (enabled) {
+    tracks.forEach((track) => {
+      track.currentTime = 0;
+      track.play().catch(() => {});
+    });
+  } else {
+    tracks.forEach((track) => {
+      track.pause();
+      track.currentTime = 0;
+    });
+  }
+
+  applyMasterVolume();
+}
+
+function updateOutdoorAmbience() {
+  const shouldPlay = gs.breakMode && camera.position.z < -4.55;
+  setOutdoorAmbience(shouldPlay);
+}
+
 function stopAllMusic() {
   [workMusic, meditationMusic, breakMusic].forEach((track) => {
     track.pause();
