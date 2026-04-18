@@ -2946,6 +2946,33 @@ function setMasterVolume(nextVolume) {
   tick();
  }
 
+
+    async function loadThoughts() {
+  try {
+    const res = await fetch("assets/data/outside-thoughts.json");
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+    const data = await res.json();
+    gs.thoughts = Array.isArray(data.thoughts) ? data.thoughts.filter(Boolean) : [];
+  } catch (err) {
+    console.error("Не удалось загрузить outside-thoughts.json", err);
+    gs.thoughts = [];
+  }
+  }
+
+   function prepareBreakThought() {
+   gs.wasOutside = false;
+   gs.outsideThoughtShownThisBreak = false;
+
+      if (!gs.thoughts.length) {
+      gs.currentBreakThought = "";
+      return;
+   }
+
+   gs.currentBreakThought = gs.thoughts[gs.nextThoughtIndex] || "";
+   gs.nextThoughtIndex = (gs.nextThoughtIndex + 1) % gs.thoughts.length;
+}
+
     function updatePackageStrip() {
       const strip = $("package-strip");
       strip.innerHTML = "";
